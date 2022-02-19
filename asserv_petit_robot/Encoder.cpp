@@ -26,7 +26,7 @@ void Encoder::set_interruptA(void (*f)(void)) {
   attachInterrupt(digitalPinToInterrupt(m_interruptA), f, CHANGE);
 }
 
-void Encoder::set_interruptB(void (voi(*f)d)) {
+void Encoder::set_interruptB(void (*f)(void)) {
   attachInterrupt(digitalPinToInterrupt(m_interruptB), f, CHANGE);
 }
 

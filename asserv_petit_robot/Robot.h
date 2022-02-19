@@ -17,8 +17,11 @@ void left_interruptB(void);
 class Robot {
 public:
   virtual ~Robot() = default;
-  Robot();
   Robot(Wheel p_right_wheel, Wheel p_left_wheel, Encoder p_encoder_right, Encoder p_encoder_left);
+  void move(const int8_t p_speed);
+  void stop();
+  
+
 
 private:
   Wheel m_right_wheel;
