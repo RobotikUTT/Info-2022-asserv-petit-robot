@@ -6,6 +6,7 @@
 #include "Wheel.h"
 #include "Encoder.h"
 #include "pins.h"
+#include "interrupts.h"
 
 void right_interruptA(void);
 void right_interruptB(void);
