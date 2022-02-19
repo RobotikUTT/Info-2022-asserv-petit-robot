@@ -8,7 +8,7 @@
 #define STOPPED 0
 
 #define MAX_SPEED 255
-#define MIN_SPEED 70
+#define MIN_SPEED 100
 
 class Wheel {
   public:
