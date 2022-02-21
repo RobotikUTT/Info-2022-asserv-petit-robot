@@ -7,6 +7,7 @@
 
 #include "Wheel.h"
 #include "pins.h"
+#include "AsservedWheel.h"
 
 
 #define TICKS_PER_REVOLUTION 2248.86
@@ -27,13 +28,9 @@ typedef struct {
 
 
 namespace Robot {
-    namespace {
-        void update_position(const int l_ticks, const int r_ticks);
-    }
     void move(const int8_t p_speed);
     void stop();
-    void display_position();
-    void display_objective();
-};
+    void compute_pid();
+}
 
 #endif

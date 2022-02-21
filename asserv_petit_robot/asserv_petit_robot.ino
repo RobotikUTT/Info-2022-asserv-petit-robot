@@ -10,6 +10,6 @@ void setup() {
 }
 
 void loop() {
-    Robot::display_position();
+    Robot::compute_pid();
 }
 

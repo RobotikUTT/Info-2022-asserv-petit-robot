@@ -2,10 +2,10 @@
 
 namespace Robot {
     namespace {
-        Wheel right_wheel(RightWheelEnable, RightWheelControl1, RightWheelControl2);
-        Wheel left_wheel(LeftWheelEnable, LeftWheelControl1, LeftWheelControl2);
         Encoder right_encoder(encoderRightA, encoderRightB);
         Encoder left_encoder(encoderLeftA, encoderLeftB);
+        AsservedWheel right_wheel(RightWheelEnable, RightWheelControl1, RightWheelControl2, encoderRightA, encoderRightB);
+        AsservedWheel left_wheel(LeftWheelEnable, LeftWheelControl1, LeftWheelControl2, encoderLeftA, encoderLeftB);
     }
 
     void move(const int8_t p_speed) {
@@ -25,6 +25,11 @@ namespace Robot {
     void stop() {
         right_wheel.stop();
         left_wheel.stop();
+    }
+
+    void compute_pid() {
+        right_wheel.compute_pid();
+        left_wheel.compute_pid();
     }
 }
 
