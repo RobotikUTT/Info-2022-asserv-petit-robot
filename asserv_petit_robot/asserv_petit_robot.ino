@@ -1,5 +1,8 @@
 #include "Robot.h"
 #include "pins.h"
+#include <PID_v1.h>
+#include <Encoder.h>
+#include <Arduino.h>
 
 void setup() {
     Serial.begin(9600);
@@ -7,7 +10,6 @@ void setup() {
 }
 
 void loop() {
-  Robot::asservissement();
-  Robot::display_position();
+    Robot::display_position();
 }
 

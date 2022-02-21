@@ -3,7 +3,8 @@
 
 #include <Arduino.h>
 #include <Encoder.h>
-#include <math.h>
+#include <PID_v1.h>
+
 #include "Wheel.h"
 #include "pins.h"
 
@@ -19,21 +20,20 @@
 
 
 typedef struct {
-  double x;
-  double y;
-  double angle;
+    double x;
+    double y;
+    double angle;
 } position_t;
 
 
 namespace Robot {
-  namespace {
-    void update_position(const int l_ticks, const int r_ticks);
-  }
-  void move(const int8_t p_speed);
-  void stop();
-  void asservissement();
-  void display_position();
-  void display_objective();
+    namespace {
+        void update_position(const int l_ticks, const int r_ticks);
+    }
+    void move(const int8_t p_speed);
+    void stop();
+    void display_position();
+    void display_objective();
 };
 
 #endif
