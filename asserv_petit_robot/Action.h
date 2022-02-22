@@ -6,11 +6,9 @@
 #define ASSERV_PETIT_ROBOT_ACTION_H
 
 
-
 class Action {
 
 };
-
 
 
 #endif //ASSERV_PETIT_ROBOT_ACTION_H

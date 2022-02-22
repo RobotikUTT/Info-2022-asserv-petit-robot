@@ -10,12 +10,12 @@
 
 #define MAX_ACTION_NBR 15
 
-class ActionList {
+class ActionQueue {
     public:
-        ActionList();
+        ActionQueue();
         void add(Action* new_action);
         void add(Action* new_action, size_t index);
-        ActionList &operator+=(Action *new_action);
+        ActionQueue &operator+=(Action *new_action);
         Action* remove();
         Action* remove(size_t index);
         inline bool is_empty() const;
