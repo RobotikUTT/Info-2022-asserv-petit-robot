@@ -1,4 +1,4 @@
-#include "wheel.h"
+#include "Wheel.h"
 
 Wheel::Wheel(
     byte motor_en, byte motor_inA, byte motor_inB, byte encoderA, byte encoderB, 
