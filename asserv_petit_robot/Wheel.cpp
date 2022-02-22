@@ -51,7 +51,7 @@ void Wheel::update()
     pid_pos.Compute();
 
     desired_speed = pid_pos_output;
-    // desired_speed = 3;
+    // desired_speed = 5;
     
     pid_speed_input = current_speed;
     pid_speed_target = desired_speed;
@@ -60,35 +60,33 @@ void Wheel::update()
 
     double motor_output = pid_speed_output;
 
-    if(motor_output < 50 && motor_output > 0){
-        motor_output = 50;
-    }
-    if(motor_output > 50 && motor_output < 0){
-        motor_output = -50;
-    }
+    #define DEADZONE 20
 
-    if(motor_output < 0){
-        digitalWrite(motor_inA, HIGH);
-        digitalWrite(motor_inB, LOW);
-    }
-    else
-    {
+    int actual_output;
+    if(motor_output > 0){
+        actual_output = map((int)motor_output, 0, 255, DEADZONE, 255);
         digitalWrite(motor_inA, LOW);
         digitalWrite(motor_inB, HIGH);
     }
+    else
+    {
+        actual_output = map((int)motor_output, -255, 0, -255, -DEADZONE);
+        digitalWrite(motor_inA, HIGH);
+        digitalWrite(motor_inB, LOW);
+    }
 
-    analogWrite(motor_en, abs((int)motor_output));
+    analogWrite(motor_en, abs(actual_output));
 
 
-    Serial.print(desired_pos);
-    Serial.print(" ");
-    Serial.print(current_pos % 2248);
-    Serial.print(" ");
+    // Serial.print(desired_pos);
+    // Serial.print(" ");
+    // Serial.print(current_pos % 2248);
+    // Serial.print(" ");
     Serial.print(desired_speed);
     Serial.print(" ");
     Serial.print(current_speed);
     Serial.print(" ");
-    Serial.print(motor_output);
+    Serial.print(motor_output / 255);
     Serial.println();    
 
     last_update = now;
