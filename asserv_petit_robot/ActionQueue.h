@@ -14,12 +14,14 @@ class ActionQueue {
     public:
         ActionQueue();
         void add(Action* new_action);
-        void add(Action* new_action, size_t index);
+        void insert(Action* new_action, size_t index);
         ActionQueue &operator+=(Action *new_action);
+        ActionQueue &operator+=(ActionQueue &other);
         Action* remove();
         Action* remove(size_t index);
         inline bool is_empty() const;
         inline bool is_full() const;
+        inline size_t size();
         Action* operator[](size_t index);
 
     private:
