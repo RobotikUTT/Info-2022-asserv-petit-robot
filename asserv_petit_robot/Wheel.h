@@ -1,87 +1,43 @@
-#ifndef WHEEL_H
-#define WHEEL_H
+#include <Encoder.h>
+#include <PID_v1.h>
 
-#include <Arduino.h>
+class Wheel
+{
 
-#define FORWARD 1
-#define BACKWARD -1
-#define STOPPED 0
+private:
+    byte motor_en;
+    byte motor_inA;
+    byte motor_inB;
 
-#define MAX_SPEED 255
-#define MIN_SPEED 100
+    Encoder encoder;
 
-class Wheel {
-    public:
-        Wheel(uint8_t p_enable_pin, uint8_t p_control_pin1, uint8_t p_control_pin2) :
-                m_enable_pin(p_enable_pin), m_control_pin{p_control_pin1, p_control_pin2}, m_speed(MAX_SPEED) {
-            pinMode(m_enable_pin, OUTPUT);
-            pinMode(m_control_pin[0], OUTPUT);
-            pinMode(m_control_pin[1], OUTPUT);
-            digitalWrite(m_enable_pin, LOW);
-        }
+    float speed_pid_P;
+    float speed_pid_I;
+    float speed_pid_D;
+    
+    float pos_pid_P;
+    float pos_pid_I;
+    float pos_pid_D;
 
-        virtual ~Wheel() = default;
+    long current_pos, desired_pos;
+    double current_speed, desired_speed;
 
-        void move_forward() {
-            m_direction = FORWARD;
-            analogWrite(m_enable_pin, m_speed);
-            digitalWrite(m_control_pin[0], HIGH);
-            digitalWrite(m_control_pin[1], LOW);
-        }
+    double pid_speed_input, pid_speed_output, pid_speed_target, pid_pos_input, pid_pos_output, pid_pos_target;
 
-        void move_forward(const uint8_t p_speed) {
-            m_direction = FORWARD;
-            analogWrite(m_enable_pin, max(MIN_SPEED, min(p_speed, MAX_SPEED)));
-            digitalWrite(m_control_pin[0], HIGH);
-            digitalWrite(m_control_pin[1], LOW);
-        }
+    PID pid_speed;
+    PID pid_pos;
 
-        void move_backward() {
-            m_direction = BACKWARD;
-            analogWrite(m_enable_pin, m_speed);
-            digitalWrite(m_control_pin[0], LOW);
-            digitalWrite(m_control_pin[1], HIGH);
-        }
+    uint16_t last_update;
 
-        void move_backward(const uint8_t p_speed) {
-            m_direction = BACKWARD;
-            analogWrite(m_enable_pin, max(MIN_SPEED, min(p_speed, MAX_SPEED)));
-            digitalWrite(m_control_pin[0], LOW);
-            digitalWrite(m_control_pin[1], HIGH);
-        }
+public:
+    Wheel(byte motor_en, byte motor_inA, byte motor_inB, byte encoderA, byte encoderB, float speed_pid_P, float speed_pid_I, float speed_pid_D, float pos_pid_P, float pos_pid_I, float pos_pid_D);
 
-        void stop(const bool force = true) {
-            if (force) {
-                /* gives a short impulse in the opposite direction to
-                the current direction to immediately stop the movement of the wheel */
-                if (m_direction == FORWARD)
-                    move_backward(MAX_SPEED);
-                else if (m_direction == BACKWARD) {
-                    move_forward(MAX_SPEED);
-                }
-                delay(10);
-            }
-            m_direction = STOPPED;
-            digitalWrite(m_enable_pin, LOW);
-        }
+    void set_max_speed(float max_speed);
+    void set_desired_pos(long desired_pos);
 
-        void set_speed(const uint8_t new_speed) {
-            m_speed = max(MIN_SPEED, min(new_speed, MAX_SPEED));
-        }
+    long get_pos();
+    float get_speed();
+    
+    void update();
 
-        inline void increase_speed(const uint8_t add_speed) {
-            set_speed(m_speed + add_speed);
-        }
-
-        uint8_t get_speed() const {
-            return m_speed;
-        }
-
-    private:
-        uint8_t m_enable_pin{};
-        uint8_t m_control_pin[2];
-        int8_t m_direction{};
-        uint8_t m_speed{};
 };
-
-#endif
