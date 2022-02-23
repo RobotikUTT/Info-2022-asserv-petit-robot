@@ -49,5 +49,5 @@ class Wheel {
         inline double get_angular_speed() const;
 
         void update();
-
+};
 #endif
