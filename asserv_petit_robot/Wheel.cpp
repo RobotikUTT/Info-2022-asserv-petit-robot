@@ -100,7 +100,6 @@ void Wheel::update()
     update_speed();
 
     update_speed_pid();
-    // desired_speed = 5;
 
     double pid_motor_output = calculate_pid_motor_output();
 

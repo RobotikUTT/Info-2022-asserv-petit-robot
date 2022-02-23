@@ -50,5 +50,6 @@ public:
     float get_speed();
     
     void update();
+    void stop();
 
 };
