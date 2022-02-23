@@ -24,7 +24,7 @@ Wheel::Wheel(
 void Wheel::update_dt()
 {
     uint16_t now = millis();
-    dt = (double)(now - last_update);
+    dt = now - last_update;
     last_update = now;
 }
 
@@ -44,7 +44,7 @@ void Wheel::update_speed()
     }
     else
     {
-        new_speed = (current_pos - previous_pos) / dt;
+        new_speed = (double)(current_pos - previous_pos) / dt;
     }
     new_speed = min(10, new_speed);
     new_speed = max(-10, new_speed);
@@ -100,16 +100,21 @@ void Wheel::update()
     update_speed();
 
     update_speed_pid();
+    // desired_speed = 5;
 
     double pid_motor_output = calculate_pid_motor_output();
 
     update_motor_output(pid_motor_output);
 
+    // Serial.print(1);
+    // Serial.print(" ");
+    // Serial.print((double)current_pos / desired_pos);
+    // Serial.print(" ");
     Serial.print(desired_speed);
     Serial.print(" ");
     Serial.print(current_speed);
     Serial.print(" ");
-    Serial.print(motor_output / 255);
+    Serial.print((double)motor_output / 255);
     Serial.println();    
 
 }
