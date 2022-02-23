@@ -23,7 +23,7 @@ Wheel::Wheel(
 
 void Wheel::update_dt() {
     uint16_t now = millis();
-    dt = (double) (now - last_update);
+    dt = now - last_update;
     last_update = now;
 }
 
@@ -38,7 +38,7 @@ void Wheel::update_speed() {
     if (dt == 0) {
         new_speed = 0;
     } else {
-        new_speed = (current_pos - previous_pos) / dt;
+        new_speed = (double)(current_pos - previous_pos) / dt;
     }
     new_speed = min(10, new_speed);
     new_speed = max(-10, new_speed);
@@ -91,7 +91,7 @@ void Wheel::update() {
     Serial.print(" ");
     Serial.print(current_speed);
     Serial.print(" ");
-    Serial.println(motor_output / 255.0);
+    Serial.println((double)motor_output / 255);
 }
 
 void Wheel::set_desired_pos(long pos) {

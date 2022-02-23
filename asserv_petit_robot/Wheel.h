@@ -1,3 +1,6 @@
+#ifndef WHEEL_H
+#define WHEEL_H
+
 #include <Encoder.h>
 #include <PID_v1.h>
 
@@ -47,4 +50,4 @@ class Wheel {
 
         void update();
 
-};
+#endif
