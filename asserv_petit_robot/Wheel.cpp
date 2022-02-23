@@ -21,14 +21,22 @@ Wheel::Wheel(
     pinMode(motor_inB, OUTPUT);
 }
 
-void Wheel::update()
+void Wheel::update_dt()
 {
-
     uint16_t now = millis();
-    double dt = (double)(now - last_update);
+    dt = now - last_update;
+    last_update = now;
+}
 
+void Wheel::update_position()
+{
     long new_pos = encoder.read();
+    previous_pos = current_pos;
+    current_pos = new_pos;
+}
 
+void Wheel::update_speed()
+{
     double new_speed;
     if(dt == 0)
     {
@@ -36,60 +44,78 @@ void Wheel::update()
     }
     else
     {
-        new_speed = (new_pos - current_pos) / dt;
+        new_speed = (double)(current_pos - previous_pos) / dt;
     }
-
-    // new_speed = min(10, new_speed);
-    // new_speed = min(-10, new_speed);
-
-    current_pos = new_pos;
+    new_speed = min(10, new_speed);
+    new_speed = max(-10, new_speed);
     current_speed = new_speed;
+}
 
+void Wheel::update_speed_pid()
+{
     pid_pos_input = (double)current_pos;
     pid_pos_target = (double)desired_pos;
 
     pid_pos.Compute();
 
     desired_speed = pid_pos_output;
-    // desired_speed = 5;
-    
+}
+
+double Wheel::calculate_pid_motor_output()
+{
     pid_speed_input = current_speed;
     pid_speed_target = desired_speed;
 
     pid_speed.Compute();
 
-    double motor_output = pid_speed_output;
+    return pid_speed_output;
+}
 
-    #define DEADZONE 20
+void Wheel::update_motor_output(double pid_desired_speed)
+{
+    const int deadzone = 20;
+    int adjusted_output;  
 
-    int actual_output;
-    if(motor_output > 0){
-        actual_output = map((int)motor_output, 0, 255, DEADZONE, 255);
+    if(pid_desired_speed > 0){
+        adjusted_output = map((int)pid_desired_speed, 0, 255, deadzone, 255);
         digitalWrite(motor_inA, LOW);
         digitalWrite(motor_inB, HIGH);
     }
     else
     {
-        actual_output = map((int)motor_output, -255, 0, -255, -DEADZONE);
+        adjusted_output = map((int)pid_desired_speed, -255, 0, -255, -deadzone);
         digitalWrite(motor_inA, HIGH);
         digitalWrite(motor_inB, LOW);
     }
 
-    analogWrite(motor_en, abs(actual_output));
+    motor_output = adjusted_output;
 
+    analogWrite(motor_en, abs(adjusted_output));
+}
 
-    // Serial.print(desired_pos);
+void Wheel::update()
+{
+    update_dt();
+    update_position();
+    update_speed();
+
+    update_speed_pid();
+
+    double pid_motor_output = calculate_pid_motor_output();
+
+    update_motor_output(pid_motor_output);
+
+    // Serial.print(1);
     // Serial.print(" ");
-    // Serial.print(current_pos % 2248);
+    // Serial.print((double)current_pos / desired_pos);
     // Serial.print(" ");
     Serial.print(desired_speed);
     Serial.print(" ");
     Serial.print(current_speed);
     Serial.print(" ");
-    Serial.print(motor_output / 255);
+    Serial.print((double)motor_output / 255);
     Serial.println();    
 
-    last_update = now;
 }
 
 void Wheel::set_desired_pos(long pos){
