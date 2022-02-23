@@ -23,7 +23,7 @@ Vector Vector::operator*(const double k) {
     return Vector(x * k, y * k);
 }
 
-Vector Vector::operator*=(const double k) {
+Vector &Vector::operator*=(const double k) {
     x *= k;
     y *= k;
     return *this;

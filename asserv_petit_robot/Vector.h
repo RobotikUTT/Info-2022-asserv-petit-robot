@@ -13,7 +13,7 @@ class Vector {
         Vector operator+(const Vector &);
         Vector operator-(const Vector &);
         Vector operator*(const double k);
-        Vector operator*=(const double k);
+        Vector &operator*=(const double k);
         Vector &operator+=(const Vector &);
         Vector &operator=(const Vector &);
         inline double scalar(const Vector &other) const;
