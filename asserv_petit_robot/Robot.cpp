@@ -58,7 +58,7 @@ namespace Robot {
 
     namespace move{
         void distance(int16_t distance);
-        void to_position(position_t position);
+        void to_position(Vector position);
     }
 
     namespace set{
