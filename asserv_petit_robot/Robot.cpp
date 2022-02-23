@@ -4,29 +4,31 @@
 
 namespace Robot {
     namespace {
-        Wheel left_wheel(LEFT_WHEEL_ENABLE, LEFT_WHEEL_CONTROL1, LEFT_WHEEL_CONTROL2, ENCODER_LEFT_A, ENCODER_LEFT_B, MOTOR_SPEED_P, MOTOR_SPEED_I, MOTOR_SPEED_D, MOTOR_POS_P, MOTOR_POS_I, MOTOR_POS_D);
-        Wheel right_wheel(RIGHT_WHEEL_ENABLE, RIGHT_WHEEL_CONTROL1, RIGHT_WHEEL_CONTROL2, ENCODER_RIGHT_A, ENCODER_RIGHT_B, MOTOR_SPEED_P, MOTOR_SPEED_I, MOTOR_SPEED_D, MOTOR_POS_P, MOTOR_POS_I, MOTOR_POS_D);
+        Wheel left_wheel(LEFT_WHEEL_ENABLE, LEFT_WHEEL_CONTROL1, LEFT_WHEEL_CONTROL2, ENCODER_LEFT_A, ENCODER_LEFT_B,
+                         MOTOR_SPEED_P, MOTOR_SPEED_I, MOTOR_SPEED_D, MOTOR_POS_P, MOTOR_POS_I, MOTOR_POS_D);
+        Wheel right_wheel(RIGHT_WHEEL_ENABLE, RIGHT_WHEEL_CONTROL1, RIGHT_WHEEL_CONTROL2, ENCODER_RIGHT_A,
+                          ENCODER_RIGHT_B, MOTOR_SPEED_P, MOTOR_SPEED_I, MOTOR_SPEED_D, MOTOR_POS_P, MOTOR_POS_I,
+                          MOTOR_POS_D);
 
         Vector robot_position;
         double robot_angle_rad;
 
         long last_left_ticks;
         long last_right_ticks;
+        double last_left_pos;
+        double last_right_pos;
     }
 
-    void update()
-    {
+    void update() {
         left_wheel.update();
         right_wheel.update();
 
-        long new_left_ticks = left_wheel.get_pos();
-        long new_right_ticks = right_wheel.get_pos();
-
-        long left_delta_ticks = new_left_ticks - last_left_ticks;
-        long right_delta_ticks = new_right_ticks - last_right_ticks;
-
-        double left_wheel_delta = left_delta_ticks / TICKS_PER_METER;
-        double right_wheel_delta = right_delta_ticks / TICKS_PER_METER;
+        double new_distance_l = left_wheel.get_distance();
+        double new_distance_r = right_wheel.get_distance();
+        double left_wheel_delta = left_wheel.get_distance() - last_left_pos;
+        double right_wheel_delta = right_wheel.get_distance() - last_right_pos;
+        last_left_pos = new_distance_l;
+        last_right_pos = new_distance_r;
 
         double angle_delta = (right_wheel_delta - left_wheel_delta) / WHEEL_SPACING;
 
@@ -42,37 +44,39 @@ namespace Robot {
         Vector position_delta = forward_delta * forward_dir + right_delta * right_dir;
 
         robot_position += position_delta;
-
     }
 
     void set_speed(double speed);
-    
+
     void stop();
     void resume();
 
-    namespace rotate{
+    namespace rotate {
         void absolute(double angle);
         void relative(double angle);
         void look_at(Vector position);
     }
 
-    namespace move{
+    namespace move {
         void distance(int16_t distance);
         void to_position(Vector position);
     }
 
-    namespace set{
+    namespace set {
         void position(Vector position);
         void angle(double angle);
     }
 
-    namespace get{
+    namespace get {
         Vector position() {}
+
         Vector forward_dir() {}
+
         Vector right_dir() {}
+
         double angle() {}
     }
-    
+
 }
 
 

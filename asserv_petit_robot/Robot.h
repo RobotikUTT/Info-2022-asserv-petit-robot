@@ -25,18 +25,15 @@ typedef struct {
 
 
 namespace Robot {
-
     namespace rotate{
         void absolute(double angle);
         void relative(double angle);
         void look_at(Vector position);
     }
-
     namespace move{
         void distance(int16_t distance);
         void to_position(Vector position);
     }
-
     namespace set{
         void position(Vector position);
         void angle(double angle);
