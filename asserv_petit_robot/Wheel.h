@@ -20,31 +20,23 @@ class Wheel {
         uint8_t motor_inA;
         uint8_t motor_inB;
         Encoder encoder;
-        long current_pos, desired_pos, previous_pos;
-        double current_speed, desired_speed;
-        double pid_speed_input, pid_speed_output, pid_speed_target, pid_pos_input, pid_pos_output, pid_pos_target;
+        long current_pos, previous_pos;
+        double current_speed, target_speed, pid_speed_output;
         PID pid_speed;
-        PID pid_pos;
         int motor_output;
         uint16_t last_update;
-        uint16_t dt;
-        void update_dt();
         void update_position();
-        void update_speed();
-        void update_speed_pid();
+        void update_speed(uint16_t dt);
         double calculate_pid_motor_output();
         void update_motor_output(double pid_motor_output);
 
     public:
         Wheel(uint8_t motor_en, uint8_t motor_inA, uint8_t motor_inB, uint8_t encoderA, uint8_t encoderB,
-              float speed_pid_P, float speed_pid_I, float speed_pid_D, float pos_pid_P, float pos_pid_I,
-              float pos_pid_D);
+              float speed_pid_P, float speed_pid_I, float speed_pid_D);
 
-        void set_max_speed(float max_speed);
-        void set_desired_pos(long desired_pos);
+        void set_target_speed(double speed_m_per_s);
         double get_angle() const;
         double get_distance() const;
-        long get_ticks() const;
         double get_speed() const;
         double get_angular_speed() const;
 

@@ -2,13 +2,8 @@
 #define ASSERV_PETIT_ROBOT_PID_COEFS_H
 
 
-#define MOTOR_SPEED_P 30
+#define MOTOR_SPEED_P 50
 #define MOTOR_SPEED_I 100
-#define MOTOR_SPEED_D 0.05
-
-#define MOTOR_POS_P 0.001
-#define MOTOR_POS_I 0
-#define MOTOR_POS_D 0
-
+#define MOTOR_SPEED_D 0.1
 
 #endif //ASSERV_PETIT_ROBOT_PID_COEFS_H
