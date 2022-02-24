@@ -42,11 +42,11 @@ class Wheel {
 
         void set_max_speed(float max_speed);
         void set_desired_pos(long desired_pos);
-        inline double get_angle() const;
-        inline double get_distance() const;
-        inline long get_ticks() const;
-        inline double get_speed() const;
-        inline double get_angular_speed() const;
+        double get_angle() const;
+        double get_distance() const;
+        long get_ticks() const;
+        double get_speed() const;
+        double get_angular_speed() const;
 
         void update();
 };

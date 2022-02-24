@@ -98,22 +98,22 @@ void Wheel::set_desired_pos(long pos) {
     this->desired_pos = pos;
 }
 
-double Wheel::get_angle() const {
+inline double Wheel::get_angle() const {
     return (current_pos / TICKS_PER_REVOLUTION) * 2 * PI;
 }
 
-double Wheel::get_distance() const {
+inline double Wheel::get_distance() const {
     return current_pos / TICKS_PER_METER;
 }
 
-long Wheel::get_ticks() const {
+inline long Wheel::get_ticks() const {
     return current_pos;
 }
 
-double Wheel::get_speed() const {
+inline double Wheel::get_speed() const {
     return 1000.0 * current_speed / TICKS_PER_METER;
 }
 
-double Wheel::get_angular_speed() const {
+inline double Wheel::get_angular_speed() const {
     return 1000.0 * current_speed / TICKS_PER_RADIAN;
 }
