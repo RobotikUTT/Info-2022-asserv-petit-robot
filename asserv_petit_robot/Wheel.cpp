@@ -2,30 +2,22 @@
 
 Wheel::Wheel(
         byte motor_en, byte motor_inA, byte motor_inB, byte encoderA, byte encoderB,
-        float speed_pid_P, float speed_pid_I, float speed_pid_D,
-        float pos_pid_P, float pos_pid_I, float pos_pid_D
+        float speed_pid_P, float speed_pid_I, float speed_pid_D
 )
         : motor_en(motor_en), motor_inA(motor_inA), motor_inB(motor_inB),
           encoder(encoderA, encoderB),
-          pid_speed(&pid_speed_input, &pid_speed_output, &pid_speed_target, speed_pid_P, speed_pid_I, speed_pid_D,
-                    DIRECT),
-          pid_pos(&pid_pos_input, &pid_pos_output, &pid_pos_target, pos_pid_P, pos_pid_I, pos_pid_D, DIRECT) {
+          pid_speed(&current_speed, &pid_speed_output, &target_speed, speed_pid_P, speed_pid_I, speed_pid_D,
+                    DIRECT)
+{
 
     pid_speed.SetMode(AUTOMATIC);
     pid_speed.SetOutputLimits(-255, 255);
-    pid_pos.SetMode(AUTOMATIC);
-    pid_pos.SetOutputLimits(-5, 5);
 
     pinMode(motor_en, OUTPUT);
     pinMode(motor_inA, OUTPUT);
     pinMode(motor_inB, OUTPUT);
 }
 
-void Wheel::update_dt() {
-    uint16_t now = millis();
-    dt = now - last_update;
-    last_update = now;
-}
 
 void Wheel::update_position() {
     long new_pos = encoder.read();
@@ -33,7 +25,7 @@ void Wheel::update_position() {
     current_pos = new_pos;
 }
 
-void Wheel::update_speed() {
+void Wheel::update_speed(uint16_t dt) {
     double new_speed;
     if (dt == 0) {
         new_speed = 0;
@@ -45,18 +37,7 @@ void Wheel::update_speed() {
     current_speed = new_speed;
 }
 
-void Wheel::update_speed_pid() {
-    pid_pos_input = (double) current_pos;
-    pid_pos_target = (double) desired_pos;
-
-    pid_pos.Compute();
-
-    desired_speed = pid_pos_output;
-}
-
 double Wheel::calculate_pid_motor_output() {
-    pid_speed_input = current_speed;
-    pid_speed_target = desired_speed;
     pid_speed.Compute();
     return pid_speed_output;
 }
@@ -81,16 +62,19 @@ void Wheel::update_motor_output(double pid_desired_speed) {
 }
 
 void Wheel::update() {
-    update_dt();
+    uint16_t now = millis();
+    uint16_t dt = now - last_update;
+    last_update = now;
+
     update_position();
-    update_speed();
-    update_speed_pid();
+    update_speed(dt);
     double pid_motor_output = calculate_pid_motor_output();
     update_motor_output(pid_motor_output);
 }
 
-void Wheel::set_desired_pos(long pos) {
-    this->desired_pos = pos;
+void Wheel::set_target_speed(double speed_m_per_s)
+{
+    target_speed = speed_m_per_s * TICKS_PER_METER / 1000.0;
 }
 
 double Wheel::get_angle() const {
@@ -99,10 +83,6 @@ double Wheel::get_angle() const {
 
 double Wheel::get_distance() const {
     return current_pos / TICKS_PER_METER;
-}
-
-long Wheel::get_ticks() const {
-    return current_pos;
 }
 
 double Wheel::get_speed() const {
