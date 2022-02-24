@@ -31,6 +31,7 @@ namespace Robot {
     namespace set{
         void position(Vector position);
         void angle(double angle);
+        void target_speed(double speed);
     }
 
     namespace get{
@@ -40,11 +41,10 @@ namespace Robot {
     double angle();
 }
 
-    void set_speed(double speed);
-    
     void stop();   // Interompre l'action
     void resume(); // Continuer l'action
     
+    void setup();
     void update(); // Appelé à chaque boucle
 }
 

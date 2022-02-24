@@ -16,9 +16,14 @@ namespace Robot {
         long last_right_ticks;
         double last_left_pos;
         double last_right_pos;
+
+        double _target_speed = 0;
     }
 
     void update() {
+        left_wheel.set_target_speed(_target_speed);
+        right_wheel.set_target_speed(_target_speed);
+
         left_wheel.update();
         right_wheel.update();
 
@@ -75,6 +80,10 @@ namespace Robot {
     namespace set {
         void position(Vector position);
         void angle(double angle);
+        void target_speed(double speed)
+        {
+            _target_speed = speed;
+        }
     }
 
     namespace get{
