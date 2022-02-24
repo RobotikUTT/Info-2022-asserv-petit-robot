@@ -1,9 +1,11 @@
 #include "Vector.h"
 #include <math.h>
 
-Vector::Vector(double x, double y) : x(x), y(y) {};
+Vector::Vector(double x, double y) : x(x), y(y) {}
 
 Vector::Vector() : Vector(0, 0) {}
+
+Vector::Vector(const Vector &copy): Vector(copy.x, copy.y) {}
 
 Vector Vector::operator+(const Vector &vector) {
     return Vector(this->x + vector.x, this->y + vector.y);
