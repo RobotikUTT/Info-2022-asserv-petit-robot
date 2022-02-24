@@ -87,33 +87,28 @@ void Wheel::update() {
     update_speed_pid();
     double pid_motor_output = calculate_pid_motor_output();
     update_motor_output(pid_motor_output);
-    Serial.print(desired_speed);
-    Serial.print(" ");
-    Serial.print(current_speed);
-    Serial.print(" ");
-    Serial.println((double)motor_output / 255);
 }
 
 void Wheel::set_desired_pos(long pos) {
     this->desired_pos = pos;
 }
 
-inline double Wheel::get_angle() const {
+double Wheel::get_angle() const {
     return (current_pos / TICKS_PER_REVOLUTION) * 2 * PI;
 }
 
-inline double Wheel::get_distance() const {
+double Wheel::get_distance() const {
     return current_pos / TICKS_PER_METER;
 }
 
-inline long Wheel::get_ticks() const {
+long Wheel::get_ticks() const {
     return current_pos;
 }
 
-inline double Wheel::get_speed() const {
+double Wheel::get_speed() const {
     return 1000.0 * current_speed / TICKS_PER_METER;
 }
 
-inline double Wheel::get_angular_speed() const {
+double Wheel::get_angular_speed() const {
     return 1000.0 * current_speed / TICKS_PER_RADIAN;
 }
