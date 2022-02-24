@@ -1,6 +1,8 @@
 #include "Robot.h"
 #include "Wheel.h"
 #include "Vector.h"
+#include "PID_v1.h"
+#include "pid_coefs.h"
 
 namespace Robot {
     namespace {
@@ -18,12 +20,23 @@ namespace Robot {
         double last_right_pos;
 
         double _target_speed = 0;
+
+        double target_angle_rad = 0;
+        double yaw_output;
+
+        double left_speed = 0;
+        double right_speed = 0;
+
+        PID pid_yaw(&robot_angle_rad, &yaw_output, &target_angle_rad, YAW_P, YAW_I, YAW_D, DIRECT);
+    }
+
+    void setup()
+    {
+        pid_yaw.SetMode(AUTOMATIC);
+        pid_yaw.SetOutputLimits(-0.5, 0.5);
     }
 
     void update() {
-        left_wheel.set_target_speed(_target_speed);
-        right_wheel.set_target_speed(_target_speed);
-
         left_wheel.update();
         right_wheel.update();
 
@@ -59,6 +72,14 @@ namespace Robot {
         }
         Vector position_delta = forward_dir * forward_delta + right_dir * right_delta;
         robot_position += position_delta;
+
+        pid_yaw.Compute();
+        Serial.println(yaw_output, 6);
+        left_speed = -yaw_output + _target_speed;
+        right_speed = yaw_output + _target_speed;
+
+        left_wheel.set_target_speed(left_speed);
+        right_wheel.set_target_speed(right_speed);
     }
 
     void set_speed(double speed);
@@ -96,7 +117,9 @@ namespace Robot {
         Vector right_dir() {
             return Vector(sin(robot_angle_rad), -cos(robot_angle_rad));
         }
-        double angle() {}
+        double angle() {
+            return robot_angle_rad;
+        }
     }
 
 }
