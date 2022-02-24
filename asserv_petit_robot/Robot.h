@@ -10,12 +10,6 @@
 
 #include "Vector.h"
 
-#define TICKS_PER_REVOLUTION 2248.86
-#define WHEEL_DIAMETER 0.074
-#define WHEEL_PERIMETER 0.2325
-#define REVOLUTIONS_PER_METER 4.3015  // 1/WHEEL_PERIMETER = 1/0.2325
-#define TICKS_PER_METER 9673.44  // 2248.86 * 4.3015
-
 #define WHEEL_SPACING   0.2
 
 typedef struct {
