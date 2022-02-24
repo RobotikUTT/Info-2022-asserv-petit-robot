@@ -6,4 +6,8 @@
 #define MOTOR_SPEED_I 100
 #define MOTOR_SPEED_D 0.1
 
+#define YAW_P 0.1
+#define YAW_I 0
+#define YAW_D 0
+
 #endif //ASSERV_PETIT_ROBOT_PID_COEFS_H
