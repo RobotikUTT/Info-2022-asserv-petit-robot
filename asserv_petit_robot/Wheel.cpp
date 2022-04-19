@@ -7,8 +7,7 @@ Wheel::Wheel(
         : motor_en(motor_en), motor_inA(motor_inA), motor_inB(motor_inB),
           encoder(encoderA, encoderB),
           pid_speed(&current_speed, &pid_speed_output, &target_speed, speed_pid_P, speed_pid_I, speed_pid_D,
-                    DIRECT)
-{
+                    DIRECT) {
 
     pid_speed.SetMode(AUTOMATIC);
     pid_speed.SetOutputLimits(-255, 255);
@@ -25,12 +24,12 @@ void Wheel::update_position() {
     current_pos = new_pos;
 }
 
-void Wheel::update_speed(uint16_t dt) {
+void Wheel::update_speed(const uint16_t dt) {
     double new_speed;
-    if (dt == 0) {
-        new_speed = 0;
+    if (dt != 0) {
+        new_speed = (double) (current_pos - previous_pos) / dt;
     } else {
-        new_speed = (double)(current_pos - previous_pos) / dt;
+        new_speed = 0;
     }
     new_speed = min(10, new_speed);
     new_speed = max(-10, new_speed);
@@ -43,22 +42,19 @@ double Wheel::calculate_pid_motor_output() {
 }
 
 void Wheel::update_motor_output(double pid_desired_speed) {
-    const int deadzone = 20;
-    int adjusted_output;
+    #define deadzone 20
 
     if (pid_desired_speed > 0) {
-        adjusted_output = map((int) pid_desired_speed, 0, 255, deadzone, 255);
+        motor_output = map((int) pid_desired_speed, 0, 255, deadzone, 255);
         digitalWrite(motor_inA, LOW);
         digitalWrite(motor_inB, HIGH);
     } else {
-        adjusted_output = map((int) pid_desired_speed, -255, 0, -255, -deadzone);
+        motor_output = map((int) pid_desired_speed, -255, 0, -255, -deadzone);
         digitalWrite(motor_inA, HIGH);
         digitalWrite(motor_inB, LOW);
     }
 
-    motor_output = adjusted_output;
-
-    analogWrite(motor_en, abs(adjusted_output));
+    analogWrite(motor_en, abs(motor_output));
 }
 
 void Wheel::update() {
@@ -72,8 +68,7 @@ void Wheel::update() {
     update_motor_output(pid_motor_output);
 }
 
-void Wheel::set_target_speed(double speed_m_per_s)
-{
+void Wheel::set_target_speed(double speed_m_per_s) {
     target_speed = speed_m_per_s * TICKS_PER_METER / 1000.0;
 }
 

@@ -1,9 +1,14 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 
+
 #include <Arduino.h>
 
+#ifdef DEBUG
+class Vector : public Printable {
+#else
 class Vector {
+#endif
     private:
         double x, y;
     public:
@@ -18,9 +23,21 @@ class Vector {
          */
         Vector(double x, double y);
         Vector(const Vector &copy);
-        Vector operator+(const Vector &);
-        Vector operator-(const Vector &);
-        Vector operator*(const double k);
+        /**
+         * @code
+         * (x1, y1) + (x2, y2) = (x1 + x2, y1 + y2)
+         */
+        Vector operator+(const Vector &) const;
+        /**
+         * @code
+         * (x1, y1) - (x2, y2) = (x1 - x2, y1 - y2)
+         */
+        Vector operator-(const Vector &) const;
+        /**
+         * @code
+         * (x, y) * k = (x*k, y*k)
+         */
+        Vector operator*(const double k) const;
         Vector &operator*=(const double k);
         Vector &operator+=(const Vector &);
         Vector &operator=(const Vector &);
@@ -45,7 +62,7 @@ class Vector {
          * // v2 now has coordinates (-2, 1) @endcode
          * @return a new Vector which is normal to this vector
          */
-        inline Vector normal() const;
+        Vector normal() const;
 
         /**
          * Compute and return the angle between this vector and another.
@@ -69,15 +86,14 @@ class Vector {
         inline double get_x() const;
         inline double get_y() const;
 
-        /**
-         * Create and return a string to print the coordinates of the vector.
-         * The returned string contains no carriage return
-         * @example @code
-         * Vector vec(3, 5);
-         * Serial.println(vec.to_string()) @endcode
-         * Will print "(3, 5)" in the Serial
-         */
-        String to_string();
+#ifdef DEBUG
+
+        size_t printTo(Print &p) const {
+            return p.print("(") + p.print(x) + p.print(", ") + p.print(y) + p.print(")");
+        }
+
+#endif
+
 };
 
 Vector operator*(const double k, const Vector &vector);

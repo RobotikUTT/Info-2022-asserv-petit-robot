@@ -5,9 +5,9 @@ Vector::Vector(double x, double y) : x(x), y(y) {}
 
 Vector::Vector() : Vector(0, 0) {}
 
-Vector::Vector(const Vector &copy): Vector(copy.x, copy.y) {}
+Vector::Vector(const Vector &copy) : Vector(copy.x, copy.y) {}
 
-Vector Vector::operator+(const Vector &vector) {
+Vector Vector::operator+(const Vector &vector) const {
     return Vector(this->x + vector.x, this->y + vector.y);
 }
 
@@ -17,11 +17,11 @@ Vector &Vector::operator+=(const Vector &vector) {
     return *this;
 }
 
-Vector Vector::operator-(const Vector &vector) {
+Vector Vector::operator-(const Vector &vector) const {
     return Vector(this->x - vector.x, this->y - vector.y);
 }
 
-Vector Vector::operator*(const double k) {
+Vector Vector::operator*(const double k) const {
     return Vector(x * k, y * k);
 }
 
@@ -59,11 +59,6 @@ double Vector::get_x() const {
 
 double Vector::get_y() const {
     return y;
-}
-
-String Vector::to_string() {
-    String string = String("(") + String(x) + ", " + String(y) + ")";
-    return string;
 }
 
 Vector operator*(const double k, const Vector &vector) {
